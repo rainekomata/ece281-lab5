@@ -36,7 +36,7 @@ entity top_basys3 is
         -- outputs
         led :   out std_logic_vector(15 downto 0);
         -- 7-segment display segments (active-low cathodes)
-        seg :   out std_logic_vector(6 downto 0);
+        seg :   out std_logic_vector(7 downto 0);
         -- 7-segment display active-low enables (anodes)
         an  :   out std_logic_vector(3 downto 0)
     );
@@ -45,6 +45,36 @@ end top_basys3;
 architecture top_basys3_arch of top_basys3 is 
   
 	-- declare components and signals
+	
+	-- twoscomp_decimal
+	component twoscomp_decimal is
+        port (
+            i_binary: in std_logic_vector(7 downto 0);
+            o_negative: out std_logic;
+            o_hundreds: out std_logic_vector(3 downto 0);
+            o_tens: out std_logic_vector(3 downto 0);
+            o_ones: out std_logic_vector(3 downto 0)
+        );
+    end component twoscomp_decimal;
+    
+    -- controller_fsm
+    
+    
+    -- TDM4
+    
+    
+    -- clock_divider
+    component clock_divider is
+        generic ( constant k_DIV : natural := 2 ); -- How many clk cycles until slow clock toggles
+                                                   -- Effectively, you divide the clk double this 
+                                                   -- number (e.g., k_DIV := 2 --> clock divider of 4)
+        port (     i_clk    : in std_logic;
+                i_reset  : in std_logic;           -- asynchronous
+                o_clk    : out std_logic           -- divided (slow) clock
+        );
+    end component clock_divider;
+    
+    -- ALU
 
   
 begin

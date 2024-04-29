@@ -39,8 +39,8 @@ library ieee;
 
 entity ALU is
     port ( i_op     : in STD_LOGIC_VECTOR (2 downto 0);
-           i_A      : in STD_LOGIC;
-           i_B      : in STD_LOGIC;
+           i_A      : in STD_LOGIC_VECTOR (7 downto 0);
+           i_B      : in STD_LOGIC_VECTOR (7 downto 0);
            
            o_flag   : out STD_LOGIC_VECTOR (2 downto 0);
            o_result : out STD_LOGIC_VECTOR (7 downto 0)
@@ -62,6 +62,16 @@ architecture behavioral of ALU is
   
 begin
 	-- PORT MAPS ----------------------------------------
+	o_result <= i_A + i_B when (i_op = "000") else
+	            i_A - i_B when (i_op = "001") else
+	            i_A or i_B when (i_op = "100" or i_op = "101") else
+	            i_A and i_B when (i_op = "010" or i_op = "011") else
+	            STD_LOGIC_VECTOR(unsigned(i_A) sll i_B(2 downto 0)) when (i_op = "111") else
+	            STD_LOGIC_VECTOR(unsigned(i_A) srl i_B(2 downto 0));
+	            
+	            
+	            
+	               
 
 	
 	
