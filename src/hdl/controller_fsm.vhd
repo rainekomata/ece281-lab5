@@ -68,3 +68,4 @@ with f_Q select
                 f_Q <= f_Q_next; 
            end if;
        end process register_proc;    
+end Behavioral;
