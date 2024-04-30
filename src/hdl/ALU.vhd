@@ -62,12 +62,42 @@ architecture behavioral of ALU is
   
 begin
 	-- PORT MAPS ----------------------------------------
-	o_result <= i_A + i_B when (i_op = "000") else
-	            i_A - i_B when (i_op = "001") else
-	            i_A or i_B when (i_op = "100" or i_op = "101") else
-	            i_A and i_B when (i_op = "010" or i_op = "011") else
-	            STD_LOGIC_VECTOR(unsigned(i_A) sll i_B(2 downto 0)) when (i_op = "111") else
-	            STD_LOGIC_VECTOR(unsigned(i_A) srl i_B(2 downto 0));
+	process(i_A, i_B, i_op)
+	begin
+	o_result <= i_A + i_B when (i_op = "000") else --addition
+	            i_A - i_B when (i_op = "001") else -- subtraction
+	            i_A or i_B when (i_op = "100" or i_op = "101") else -- or
+	            i_A and i_B when (i_op = "010" or i_op = "011") else -- and 
+	            STD_LOGIC_VECTOR(unsigned(i_A) sll i_B(2 downto 0)) when (i_op = "111") else -- left logical shift
+	            STD_LOGIC_VECTOR(unsigned(i_A) srl i_B(2 downto 0)); -- right logical shift
+	end process;
+	            
+    case i_op is
+                    when "001" =>
+                        o_result <= i_A - i_B;
+                        o_flag <= "010" when (i_A < i_B) else "000";
+                    when "100" | "101" =>
+                        o_result <= i_A or i_B;
+                        o_flag <= "000";
+                    when "010" | "011" =>
+                        o_result <= i_A and i_B;
+                        o_flag <= "000";
+                    when "111" =>
+                        o_result <= STD_LOGIC_VECTOR(unsigned(i_A) sll i_B(2 downto 0));
+                        o_flag <= "000";
+                    when "110" =>
+                        o_result <= STD_LOGIC_VECTOR(unsigned(i_A) srl i_B(2 downto 0));
+                        o_flag <= "000";
+                    when others =>
+                        o_result <= (others => '0');
+                        o_flag <= "000";
+                end case;
+                
+	    	    
+	
+    o_flag <= "100" when (i_op = "000") and ((i_A) + unsigned(i_B) > 255) else
+                          "000";
+
 	            
 	            
 	            

@@ -58,9 +58,28 @@ architecture top_basys3_arch of top_basys3 is
     end component twoscomp_decimal;
     
     -- controller_fsm
+    component controller_fsm is
+        port(
+            i_reset   : in std_logic;
+            i_adv     : in std_logic;
+            o_cycle   : out std_logic_vector (3 downto 0)
+          );
+    end component controller_fsm;
     
     
     -- TDM4
+    component TDM4 is
+        generic ( constant k_WIDTH : natural  := 4); -- bits in input and output
+        Port ( i_clk        : in  STD_LOGIC;
+               i_reset        : in  STD_LOGIC; -- asynchronous
+               i_D3         : in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
+               i_D2         : in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
+               i_D1         : in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
+               i_D0         : in  STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
+               o_data        : out STD_LOGIC_VECTOR (k_WIDTH - 1 downto 0);
+               o_sel        : out STD_LOGIC_VECTOR (3 downto 0)    -- selected data line (one-cold)
+        );
+    end component TDM4;
     
     
     -- clock_divider
@@ -75,6 +94,15 @@ architecture top_basys3_arch of top_basys3 is
     end component clock_divider;
     
     -- ALU
+    component ALU is
+        port ( i_op     : in STD_LOGIC_VECTOR (2 downto 0);
+               i_A      : in STD_LOGIC_VECTOR (7 downto 0);
+               i_B      : in STD_LOGIC_VECTOR (7 downto 0);
+               
+               o_flag   : out STD_LOGIC_VECTOR (2 downto 0);
+               o_result : out STD_LOGIC_VECTOR (7 downto 0)
+             );
+    end component ALU;
 
   
 begin
