@@ -140,7 +140,7 @@ begin
 	   
     );
     clock_divider_inst: clock_divider
-    generic map ( k_DIV => 50000000 ) -- convert MHz to Hz 
+    generic map ( k_DIV => 50000 ) -- convert MHz to Hz 
     port map (
         i_clk => clk,
         i_reset => w_reset,
@@ -191,7 +191,8 @@ begin
 	-- CONCURRENT STATEMENTS ----------------------------
 	an(3 downto 0) <= x"F" when w_cycle = "0001" else
 	                  w_sel;
-    
+	led(3 downto 0) <= w_cycle;	                 
+    led(12 downto 4) <= "000000000";
     
     --mux
     w_Y <= w_A when w_cycle = "0010" else
